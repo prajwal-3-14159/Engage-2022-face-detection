@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection Web App \ Home</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+
+<body id="Body">
+    <header>
+        <div>
+            <nav class="navbar">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <img src="https://cdn2.iconfinder.com/data/icons/antivirus-internet-security/33/facial_recognition-512.png"
+                            alt="face rec logo" width="30" height="24" class="d-inline-block align-text-top"
+                            id="home-navbar-title">
+                        <b>Face Detection Web App \ Home</b>
+                        <a href="home.html" button class="btn btn-secondary" type="button"><b>home</b></a>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div>
+            <br><br><br><br><br><br>
+        </div>
+        <div class="login-options">
+            <div class="d-grid gap-2 col-5 mx-auto">
+                <a href="{{ url_for('login') }}" button class="btn btn-primary" type="button">login as an Student</a>
+                <a href="{{ url_for('register') }}" button class="btn btn-secondary" type="button">Register a Student as an Instructor</a>
+            </div>
+        </div>
+    </main>
+<!--    <h1>Login Authentication System in Flask.</h1>
+
+    <a href="{{ url_for('login') }}">Login Page</a><br>
+    <a href="{{ url_for('register') }}">Register Page</a><br> -->
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://https://code.jquery.com/jquery-2.2.4.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detection Web App \ Student login</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+
+<body id="Body">
+    <header>
+        <div>
+            <nav class="navbar">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <img src="https://cdn2.iconfinder.com/data/icons/antivirus-internet-security/33/facial_recognition-512.png"
+                            alt="face rec logo" width="30" height="24" class="d-inline-block align-text-top"
+                            id="home-navbar-title">
+                        <b>Face Detection Web App \ Student login</b>
+                        <a href="{{ url_for('home') }}" button class="btn btn-secondary" type="button"><b>home</b></a>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+                <div class='container col-5'>
+                <!-- container-fluid for full screen -->
+                <h2>Login as a Student</h2>
+                <form method="post" action="">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <label for="userid" class="form-label">User ID</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {{ form.username }}>
+                        <div id="emailHelp" class="form-text">Enter your registered e-mail id</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" {{ form.password }}>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" {{ form.submit }}>Submit</button>
+                </form>
+            </div>
+    </main>
+   <!-- <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        {{ form.username }}
+        {{ form.password }}
+        {{ form.submit }}
+    </form> -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://https://code.jquery.com/jquery-2.2.4.min.js"></script>
+</body>
+
+</html>
