@@ -5,11 +5,11 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
-import cv2
 import face_recognition
 import os
 import pickle
 import numpy as np
+import cv2
 
 
 app = Flask(__name__)
