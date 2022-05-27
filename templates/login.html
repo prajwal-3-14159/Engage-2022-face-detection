@@ -39,12 +39,14 @@
                     {{ form.hidden_tag() }}
                     <div class="mb-3">
                         <label for="userid" class="form-label">User ID</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {{ form.username }}>
+                        <input  type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" {{ form.username }}>
+
                         <div id="emailHelp" class="form-text">Enter your registered e-mail id</div>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
                         <input type="password" class="form-control" id="exampleInputPassword1" {{ form.password }}>
+
                     </div>
 
                     <button type="submit" class="btn btn-primary" {{ form.submit }}>Submit</button>

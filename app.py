@@ -10,13 +10,26 @@ import os
 import pickle
 import numpy as np
 import cv2
+from datetime import datetime
+import smtplib
+import imghdr
+from email.message import EmailMessage
+import matplotlib.pyplot as plt
 
+
+EMAIL_ADDRS = 'prajwal.s.k.596@gmail.com'
+EMAIL_PSWRD = 'elfpokeahrabhvva'
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'thisisasecretkey'
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SECRET_KEY'] = 'thisisasecretkey'
 
 
 login_manager = LoginManager()
@@ -41,6 +54,8 @@ class RegisterForm(FlaskForm):
 
     password = PasswordField(validators=[
                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
+    admin_key = PasswordField(validators=[
+                             InputRequired(), Length(min=4, max=20)])
 
     submit = SubmitField('Register')
 
@@ -50,6 +65,11 @@ class RegisterForm(FlaskForm):
         if existing_user_username:
             raise ValidationError(
                 'That username already exists. Please choose a different one.')
+
+    def validate_adminkey(self, admin_key):
+        if admin_key != 'Admin1':
+            raise ValidationError(
+                'Wrong admin key, Enter correct admin Key to register!')
 
 
 class LoginForm(FlaskForm):
@@ -89,6 +109,7 @@ def dashboard():
 @login_required
 def logout():
     logout_user()
+    send_mail(attendance_score)
     return redirect(url_for('login'))
 
 
@@ -96,7 +117,7 @@ def logout():
 def register():
     form = RegisterForm()
 
-    if form.validate_on_submit():
+    if form.validate_on_submit() and form.admin_key.data == 'Admin1':
         hashed_password = bcrypt.generate_password_hash(form.password.data)
         new_user = User(username=form.username.data, password=hashed_password)
         db.session.add(new_user)
@@ -130,47 +151,94 @@ face_locations = []
 face_encodings = []
 face_names = []
 process_this_frame = True
+attendance_score = {}
+
+
+def markAttendance(name, score):
+    if score != 1:
+        with open('Attendance.csv', 'r+') as f:
+            myDataList = f.readlines()
+            nameList = []
+            for line in myDataList:
+                entry = line.split(',')
+                nameList.append(entry[0])
+                if name not in nameList:
+                    now = datetime.now()
+                    dtString = now.strftime('%H:%M:%S')
+                    f.writelines(f'\n{name},{dtString},{score}')
+                    attendance_score[dtString] = score
+                    print(attendance_score)
 
 
 def gen_frames():
+    cap = cv2.VideoCapture(0)
+
+    score = 0
+
     while True:
-        success, frame = camera.read()  # read the camera frame
-        if not success:
-            break
-        else:
-            small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-            rgb_small_frame = small_frame[:, :, ::-1]
+        success, img = cap.read()
 
-            face_locations = face_recognition.face_locations(rgb_small_frame)
-            face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
-            face_names = []
-            for face_encoding in face_encodings:
-                matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
-                name = "Unknown"
-                face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-                best_match_index = np.argmin(face_distances)
-                if matches[best_match_index]:
-                    name = known_face_names[best_match_index]
+        small_frame = cv2.resize(img, (0, 0), None, 0.25, 0.25)
+        rgb_small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
 
-                face_names.append(name)
+        face_locations = face_recognition.face_locations(rgb_small_frame)
+        face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
 
-            for (top, right, bottom, left), name in zip(face_locations, face_names):
-                top *= 4
-                right *= 4
-                bottom *= 4
-                left *= 4
+        for encodeFace, faceLoc in zip(face_encodings, face_locations):
+            matches = face_recognition.compare_faces(face_encodings, encodeFace)
+            face_distances = face_recognition.face_distance(known_face_encodings, encodeFace)
+            # print(faceDis)
+            matchIndex = np.argmin(face_distances)
 
-                cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+            if matches[matchIndex]:
+                score += 1
+                name = known_face_names[matchIndex].upper()
+                y1, x2, y2, x1 = faceLoc
+                y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
+                cv2.putText(img, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
 
-                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-                font = cv2.FONT_HERSHEY_DUPLEX
-                cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+                now = str(datetime.now().time())
+                #sec_int = (int(float(now[6:8])))
+                min_int = int(now[3:5])
+                if min_int % 2 == 0:
+                    markAttendance(name, score)
+                    score = 0
+        ret, buffer = cv2.imencode('.jpg', img)
+        img = buffer.tobytes()
+        yield (b'--frame\r\n'
+        b'Content-Type: image/jpeg\r\n\r\n' + img + b'\r\n')
 
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
+def send_mail(AttendanceScore):
+    time = list(AttendanceScore.keys())
+    scores = list(AttendanceScore.values())
+
+    plt.bar(range(len(AttendanceScore)), scores, tick_label=time)
+    plt.xlabel("time present")
+    plt.ylabel("relative attention, presence")
+    plt.title("plot showing relative attention of student every 3-min ")
+    #plt.legend()
+    plt.savefig('graph.pdf')
+    #plt.show()
+
+    msg = EmailMessage()
+    msg['Subject'] = 'Engage-2022'
+    msg['From'] = EMAIL_ADDRS
+    msg['To'] = 'ma20btech11013@iith.ac.in'
+    msg.set_content('pdf attached')
+    with open('graph.pdf', 'rb') as f:
+        file_data = f.read()
+        #file_type = imghdr.what(f.name)
+        file_name = f.name
+    msg.add_attachment(file_data, maintype='pdf', subtype='pdf', filename=file_name)
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_ADDRS, EMAIL_PSWRD)
+
+        smtp.send_message(msg)
+
+    #os.remove('graph.pdf')
 
 
 @app.route('/video_feed')

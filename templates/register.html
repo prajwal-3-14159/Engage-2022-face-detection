@@ -44,7 +44,10 @@
                         <label for="exampleInputPassword1" class="form-label">Password</label>
                         <input type="password" class="form-control" id="exampleInputPassword1" {{ form.password }}>
                     </div>
-
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Admin Key</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" {{ form.admin_key }}>
+                    </div>
                     <button type="submit" class="btn btn-primary" {{ form.submit }}>Submit</button>
                 </form>
         </div>

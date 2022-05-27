@@ -40,7 +40,11 @@
                 <div class="col-lg-8  offset-lg-2">
                     <h3 class="mt-5">Live Preview</h3>
                     <img src="{{ url_for('video_feed') }}" width="100%">
+                    <div>
+                        <a href="{{url_for('logout')}}" button class="btn btn-secondary" type="button"><b>Submit and Logout</b></a>
+                    </div>
                 </div>
+
             </div>
         </div>
     </main>
@@ -53,4 +57,4 @@
 
 
 
-<a href="{{url_for('logout')}}">Press here to logout</a>
+<!--href="{{url_for('logout')}}">Press here to logout</a>}-->
