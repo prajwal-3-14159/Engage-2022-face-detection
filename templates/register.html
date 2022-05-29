@@ -48,7 +48,12 @@
                         <label for="exampleInputPassword1" class="form-label">Admin Key</label>
                         <input type="password" class="form-control" id="exampleInputPassword1" {{ form.admin_key }}>
                     </div>
-                    <button type="submit" class="btn btn-primary" {{ form.submit }}>Submit</button>
+                    <!--div>
+{#                        {{ form.file() }} {{form.upload() }}#}
+                    </div-->
+                    <div>
+                        <button type="submit" class="btn btn-primary" {{ form.submit }}>Submit</button>
+                    </div>
                 </form>
         </div>
     </main>

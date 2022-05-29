@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/Flask-File-Uploads" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/login3/building_user_login_system" vcs="" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/video-stream-sample" vcs="Git" />
   </component>
 </project>
